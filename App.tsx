@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import OneSignal from 'react-native-onesignal'
 import { NativeBaseProvider } from 'native-base';
@@ -20,6 +21,23 @@ export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   tagUserInfoCreate('rafael@email.com')
+
+  useEffect(() => {
+    const unsubscribe = OneSignal.setNotificationOpenedHandler((response) => {
+      const { actionId } = response.action as any
+
+      switch (actionId) {
+        case '1':
+          return console.log('Ver todas')
+        case '2':
+          return console.log('Ver pedido')
+        default:
+          return console.log('Ver foi clicado em botão de ação')
+      }
+    })
+
+    return () => unsubscribe
+  }, [])
 
   return (
     <NativeBaseProvider theme={THEME}>
